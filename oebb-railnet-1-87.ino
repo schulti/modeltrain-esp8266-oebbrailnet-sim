@@ -1,5 +1,5 @@
 /*
- * Author: Stefan Schultheis, November 2017
+ * Author: Stefan Schultheis
  * https://stefan.schultheis.at
  * The program can be used under CCzero license, please note that
  * parts of the code are
@@ -50,28 +50,22 @@ void handleRoot() {
 }
 
 void handleLandingPage() {
-  server.send_P(200, "image/png", railnet_landing_png, sizeof(railnet_landing_png));
+	server.send_P(200, "image/png", railnet_landing_png, sizeof(railnet_landing_png));
 }
 
 void setup() {
 	delay(1000);
-	Serial.begin(115200);
-	Serial.println();
-	Serial.print("Configuring access point...");
 	WiFi.softAP(ssid, password);
 	IPAddress myIP = WiFi.softAPIP();
-	Serial.print("AP IP address: ");
-	Serial.println(myIP);
 	server.on("/", handleRoot);
 	server.on("/landing.png", handleLandingPage);
 	server.begin();
-	Serial.println("HTTP server started");
 	dnsServer.setTTL(300);
 	dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);
 	dnsServer.start(DNS_PORT, "railnet.oebb.at", myIP);
 }
 
 void loop() {
- dnsServer.processNextRequest();
- server.handleClient();
+	dnsServer.processNextRequest();
+	server.handleClient();
 }
